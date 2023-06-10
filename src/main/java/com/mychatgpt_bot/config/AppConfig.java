@@ -1,15 +1,18 @@
 package com.mychatgpt_bot.config;
 
 import com.mychatgpt_bot.bot.TelegramBot;
-import org.springframework.beans.factory.annotation.Value;
+import com.mychatgpt_bot.service.ChatGPTService;
 import org.springframework.context.annotation.*;
 
 @Configuration
 @PropertySource("classpath:application.properties")
 public class AppConfig {
     @Bean
-    public TelegramBot telegramBot(@Value("${bot.username}") String username,
-                                   @Value("${bot.token}") String token) {
-        return new TelegramBot(username, token);
+    public ChatGPTService chatGPTService() {
+        return new ChatGPTService();
+    }
+    @Bean
+    public TelegramBot telegramBot(ChatGPTService chatGPTService) {
+        return new TelegramBot(chatGPTService);
     }
 }
