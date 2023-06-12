@@ -3,11 +3,15 @@ package com.mychatgpt_bot.service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 
 public class ChatGPTService {
+
     public static final String RESPONSE_TO_MEDIA_CONTENT = "As a text-based AI language model, my capabilities are limited to creating and understanding text. I do not have direct access to or understanding of other types of media such as images, audio or video. However, I can help you create text descriptions or provide information related to different types of media based on the text information you provide.";
 
     @Value("${openai.api.key}")

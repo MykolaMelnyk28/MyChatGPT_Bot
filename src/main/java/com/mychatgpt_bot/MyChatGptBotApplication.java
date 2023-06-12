@@ -12,12 +12,13 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @SpringBootApplication
 public class MyChatGptBotApplication {
 	public static void main(String[] args) throws TelegramApiException {
+
 		SpringApplication.run(MyChatGptBotApplication.class, args);
+		
 		final AnnotationConfigApplicationContext context =
 				new AnnotationConfigApplicationContext(AppConfig.class);
 
 		TelegramBot telegramBot = context.getBean(TelegramBot.class);
-
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
 		telegramBotsApi.registerBot(telegramBot);
 	}

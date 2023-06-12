@@ -10,11 +10,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class TelegramBot extends TelegramLongPollingBot {
+
+    private final ChatGPTService chatGpt;
+
     @Value("${bot.username}")
     private String username;
+
     @Value("${bot.token}")
     private String token;
-    private final ChatGPTService chatGpt;
+        
 
     public TelegramBot(ChatGPTService chatGpt) {
         this.chatGpt = chatGpt;
@@ -40,7 +44,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (update.getMessage().hasText()) {
                 String text = update.getMessage().getText();
-
                 askChatGpt(sendMessage, chatId, text);
             } else {
                 send(chatId, ChatGPTService.RESPONSE_TO_MEDIA_CONTENT);
@@ -66,7 +69,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void sendTypingAction(String chatId) {
         SendChatAction action = new SendChatAction();
-
         try {
             action.setChatId(chatId);
             action.setAction(ActionType.TYPING);
