@@ -1,7 +1,10 @@
 package com.mychatgpt_bot.bot;
 
+import com.mychatgpt_bot.config.BotProperties;
 import com.mychatgpt_bot.service.ChatGPTService;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
@@ -9,29 +12,25 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component
 public class TelegramBot extends TelegramLongPollingBot {
-
+    private final Logger logger = LoggerFactory.getLogger(TelegramBot.class);
+    private final BotProperties botProperties;
     private final ChatGPTService chatGpt;
 
-    @Value("${bot.username}")
-    private String username;
-
-    @Value("${bot.token}")
-    private String token;
-        
-
-    public TelegramBot(ChatGPTService chatGpt) {
+    public TelegramBot(BotProperties botProperties, ChatGPTService chatGpt) {
+        this.botProperties = botProperties;
         this.chatGpt = chatGpt;
     }
 
     @Override
     public String getBotUsername() {
-        return username;
+        return botProperties.getBotUsername();
     }
 
     @Override
     public String getBotToken() {
-        return token;
+        return botProperties.getBotToken();
     }
 
     @Override
@@ -62,8 +61,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage.setChatId(chatId);
             sendMessage.setText(text);
             execute(sendMessage);
+            logger.info("Send response");
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
         }
     }
 
@@ -73,8 +73,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             action.setChatId(chatId);
             action.setAction(ActionType.TYPING);
             execute(action);
+            logger.info("Send typing action");
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }
